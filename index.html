@@ -4,14 +4,14 @@
 <head>
   <meta charset="utf-8">
   <title>Favorite Dinosaur</title>
-  <!-- <style type="text/css">
+  <style type="text/css">
     button,
     div,
     form,
     input {
       margin: 10px;
     }
-  </style> -->
+  </style>
 </head>
 
 <body>
@@ -31,26 +31,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
 
+      var dinoNames = ["Dysalotosaurus", "Rhodanosaurus", "Tirranosaurus Rex", "Aristosaurus", "Tapinocephalus", "Neuquenraptor", "Ratchasimasaurus", "Diabloceratops", "Velociraptor", "Rajasaurus"];
+
+      function displayGif() {
+
+        var topic = $(this).attr("data-topic");
+      }
+
       $("#addDino").on("click", function (event) {
         event.preventDefault();
 
-        var queryUrl = "https://api.giphy.com/v1/gifs/search?q=dinosaurs&api_key=VmUG58HBoWRa67btKgQk1opacsJJDyQy&limit=10";
-     
-
+        var queryUrl = "https://api.giphy.com/v1/gifs/search?q=" + topic + "&api_key=VmUG58HBoWRa67btKgQk1opacsJJDyQy&limit=10";
+        
+        console.log(queryUrl);
+         
           $.ajax({
-            url: queryUrl,
-            method: "GET"
+          url: queryUrl,
+          method: "GET"
           }).then(function (response) {
           
           for (var i = 0; i < response.data.length; i++) {
-          
+          var dinoDiv$ = $("<div class= 'col-md-2 img-fluid pull-left text-center'>");
+         
           var animalImg = $("<img>");  
           var dinoRating = $("<h1>").text(response.data[i].rating);
-          var dinoImgGif = $(animalImg).attr("data-moving", response.data[i].image_original);
-          var dinoImgStill = $(animalImg).attr("data-still", response.data[i].images.original_still);
+          var dinoImgGif = $(animalImg).attr("data-moving", response.data[i].image_original.url);
+          var dinoImgStill = $(animalImg).attr("data-still", response.data[i].images.original_still.url);
 
           $(animalImg).attr("src", response.data[i].images.original_still);
-
 
 
 
@@ -60,6 +68,7 @@
         });
 
       });
+    
 
        
 
