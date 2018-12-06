@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Favorite Dinosaur</title>
+  <!-- <style type="text/css">
+    button,
+    div,
+    form,
+    input {
+      margin: 10px;
+    }
+  </style> -->
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Jurassic Search</h1>
+
+    <form id="dino-form">
+      <label for="dino-input">Looking for Dinosaurs??</label>
+      <input type="text" id="dinoInput"><br>
+
+      <!-- Button triggers new Dino to be added -->
+      <button type="button" class="btn btn-light" id="addDino"> Add a Dinosaur!! </button>
+    </form>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+      $("#addDino").on("click", function (event) {
+        event.preventDefault();
+
+        var queryUrl = "https://api.giphy.com/v1/gifs/search?q=dinosaurs&api_key=VmUG58HBoWRa67btKgQk1opacsJJDyQy&limit=10";
+     
+
+          $.ajax({
+            url: queryUrl,
+            method: "GET"
+          }).then(function (response) {
+          
+          for (var i = 0; i < response.data.length; i++) {
+          
+          var animalImg = $("<img>");  
+          var dinoRating = $("<h1>").text(response.data[i].rating);
+          var dinoImgGif = $(animalImg).attr("data-moving", response.data[i].image_original);
+          var dinoImgStill = $(animalImg).attr("data-still", response.data[i].images.original_still);
+
+          $(animalImg).attr("src", response.data[i].images.original_still);
+
+
+
+
+
+
+          }
+        });
+
+      });
+
+       
+
+
+
+    </script>
+
+  </div>
+</body>  
