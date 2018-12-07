@@ -1,80 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <title>Favorite Dinosaur</title>
-  <style type="text/css">
+  <head>
+    <meta charset="utf-8">
+    <title>Favorite Dinosaur</title>
+    <style type="text/css">
     button,
     div,
     form,
     input {
       margin: 10px;
     }
-  </style>
-</head>
+    </style>
+  </head>
 
-<body>
+  <body>
 
-  <div class="container">
-    <h1>Jurassic Search</h1>
+    <div class="container">
+      <h1>Jurassic Search</h1>
 
-    <form id="dino-form">
-      <label for="dino-input">Looking for Dinosaurs??</label>
-      <input type="text" id="dinoInput"><br>
+      <div id="dinoView"></div>
+      <form id="dino-form">
+        <label for="dinoInput">Looking for Dinosaurs??</label>
+        <input type="text" id="dinoInput"><br>
 
-      <!-- Button triggers new Dino to be added -->
-      <button type="button" class="btn btn-light" id="addDino"> Add a Dinosaur!! </button>
-    </form>
+        <!-- Button triggers new Dino to be added -->
+        <button type="button" class="btn btn-light" id="addDino"> Add a Dinosaur!! </button>
+      </form>
+
+      <div class="row"></div>
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script type="text/javascript">
 
-      var dinoNames = ["Dysalotosaurus", "Rhodanosaurus", "Tirranosaurus Rex", "Aristosaurus", "Tapinocephalus", "Neuquenraptor", "Ratchasimasaurus", "Diabloceratops", "Velociraptor", "Rajasaurus"];
-
-      function displayGif() {
-
-        var topic = $(this).attr("data-topic");
-      }
-
-      $("#addDino").on("click", function (event) {
-        event.preventDefault();
-
-        var queryUrl = "https://api.giphy.com/v1/gifs/search?q=" + topic + "&api_key=VmUG58HBoWRa67btKgQk1opacsJJDyQy&limit=10";
+      var dinoNames = ["Spinosaurus", "Triceratops", "Tyrranosaurus Rex", "Allosaurus", "Diplodocus", "Apatosaurus", "Brachiosaurus", "Stegosaurus", "Velociraptor", "Ankylosaurus"];
         
-        console.log(queryUrl);
-         
-          $.ajax({
-          url: queryUrl,
-          method: "GET"
-          }).then(function (response) {
-          
-          for (var i = 0; i < response.data.length; i++) {
-          var dinoDiv$ = $("<div class= 'col-md-2 img-fluid pull-left text-center'>");
-         
-          var animalImg = $("<img>");  
-          var dinoRating = $("<h1>").text(response.data[i].rating);
-          var dinoImgGif = $(animalImg).attr("data-moving", response.data[i].image_original.url);
-          var dinoImgStill = $(animalImg).attr("data-still", response.data[i].images.original_still.url);
-
-          $(animalImg).attr("src", response.data[i].images.original_still);
-
-
-
-
-
-          }
-        });
-
-      });
+        renderButtons();
+        
+        function renderButtons() {
+          $("#dinoView").empty();
+          for (var i = 0; i < dinoNames.length; i++) {
+          var a = $("<button>");
+          a.addClass("animal");
+          a.attr("data-name", dinoNames[i]);
+          a.text(dinoNames[i]);
+          $("#dinoView").append(a);
+        }
     
 
-       
 
+        $("#addDino").on("click", function (event) {
+          event.preventDefault();
 
+          var userDino = $("#dinoInput").val().trim();
 
-    </script>
+          if (!dinoNames.includes(userDino) && userDino !== "") {dinoNames.push(userDino);}
+            
+          
+            var queryUrl = "https://api.giphy.com/v1/gifs/search?q=" + userDino + "&api_key=VmUG58HBoWRa67btKgQk1opacsJJDyQy&limit=10";
+            console.log(queryUrl);
 
-  </div>
-</body>  
+            $.ajax({
+              url: queryUrl,
+              method: "GET"
+            }).then(function (response) {
+
+              console.log(response);
+
+              for (var i = 0; i < response.data.length; i++) {
+              
+              var dinoRating = $("<h1>").text("Rated: " + response.data[i].rating);
+              var dinoDiv = $("<div class= 'col-md-2 img-fluid pull-left text-center'>");
+              var animalImg = $("<img>");
+
+              $(animalImg).attr("src", response.data[i].images.original_still);
+              animalImg.addClass("gif");
+              var dinoImgGif = $(animalImg).attr("data-moving", response.data[i].image_original.url);
+              var dinoImgStill = $(animalImg).attr("data-still", response.data[i].images.original_still.url);
+
+              
+              dinoDiv.append(dinoRating, animalImg);
+              $(".row").prepend(dinoDiv);
+              }
+            
+
+            });
+            
+          });
+          
+        };
+
+    
+
+      </script>
+
+    </div>
+  </body>
+</html>
+
